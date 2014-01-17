@@ -44,16 +44,22 @@ object Dependencies {
   val slickVersion = "2.0.0-RC1"
   val jdbcSqliteVersion = "3.7.2"
   val jzlibVersion = "1.1.3"
+  val specs2Version = "2.3.7"
 
   val slick = "com.typesafe.slick" %% "slick" % slickVersion
   val jdbcSqlite = "org.xerial" % "sqlite-jdbc" % jdbcSqliteVersion
   val jzlib = "com.jcraft" % "jzlib" % jzlibVersion
+  val specs2 = "org.specs2" %% "specs2" % specs2Version % "test"
 }
 
 object StileBuild extends Build {
   import Resolvers._
   import Dependencies._
   import BuildSettings._
+
+  val commonDeps = Seq(
+    specs2
+  )
 
   val tileDeps = Seq(
     slick,
@@ -70,7 +76,7 @@ object StileBuild extends Build {
   lazy val common = Project(
     "common",
     file("stile-common"),
-    settings = buildSettings
+    settings = buildSettings ++ Seq(libraryDependencies ++= commonDeps)
   )
 
   lazy val tile = Project(

@@ -6,9 +6,9 @@ import Q.interpolation
 import java.sql.Blob
 import com.jcraft.jzlib.{ Deflater, Inflater }
 
-class MBTileStore(dbName: String) extends TileStore {
+class MBTileStore(dbName: String, extension: String = "mbtiles") extends TileStore {
   lazy val db = Database.forURL(
-    s"jdbc:sqlite:$dbName.mbtiles",
+    s"jdbc:sqlite:$dbName.$extension",
     driver = "org.sqlite.JDBC"
   )
 

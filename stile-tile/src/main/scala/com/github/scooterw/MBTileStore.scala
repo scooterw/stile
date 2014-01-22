@@ -1,9 +1,7 @@
 package com.github.scooterw
 
 import scala.slick.jdbc.JdbcBackend.Database
-import scala.slick.jdbc.{ GetResult, StaticQuery => Q }
-import Q.interpolation
-import java.sql.Blob
+import scala.slick.driver.SQLiteDriver.simple._
 import com.jcraft.jzlib.{ Deflater, Inflater }
 
 class MBTileStore(dbName: String, extension: String = "mbtiles") extends TileStore {
@@ -12,8 +10,8 @@ class MBTileStore(dbName: String, extension: String = "mbtiles") extends TileSto
     driver = "org.sqlite.JDBC"
   )
 
-  implicit val getStringResult = GetResult(r => r.nextString)
-  implicit val getByteArrayResult = GetResult(r => r.nextBytes)
+  val tiles: TableQuery[Tiles] = TableQuery[Tiles]
+  val metadata: TableQuery[Metadata] = TableQuery[Metadata]
 
   def get(coord: Coordinate, format: Option[String] = Some("image/png")): Tile = {
     val row = flipY(coord.zoom, coord.row)
@@ -33,21 +31,21 @@ class MBTileStore(dbName: String, extension: String = "mbtiles") extends TileSto
   }
 
   def getTileData(zoom: Int, column: Int, row: Int): Array[Byte] = {
-    val sql = "select tile_data from tiles where zoom_level = %s and tile_column = %s and tile_row = %s".format(zoom, column, row)
+    val query = tiles.filter(_.zoom === zoom).filter(_.col === column).filter(_.row === row).take(1).map(_.data)
 
     db withSession {
       implicit session =>
-        Q.queryNA[Array[Byte]](sql).first
+        query.list.head
     }
   }
 
   def getTileFormat: Option[String] = {
-    val sql = "select value from metadata where name = 'format'"
+    val query = metadata.filter(_.name === "format").take(1).map(_.value)
 
     try {
       db withSession {
         implicit session =>
-          Q.queryNA[String](sql).firstOption
+          Some(query.list.head)
       }
     } catch {
       case ex: java.util.NoSuchElementException => None

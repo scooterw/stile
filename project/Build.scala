@@ -41,7 +41,7 @@ object ShellPrompt {
 object Resolvers {}
 
 object Dependencies {
-  val slickVersion = "2.0.0-RC1"
+  val slickVersion = "2.0.0"
   val jdbcSqliteVersion = "3.7.2"
   val jzlibVersion = "1.1.3"
   val specs2Version = "2.3.7"

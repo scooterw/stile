@@ -64,7 +64,8 @@ object StileBuild extends Build {
   val tileDeps = Seq(
     slick,
     jdbcSqlite,
-    jzlib  
+    jzlib,
+    specs2
   )
 
   lazy val main = Project(

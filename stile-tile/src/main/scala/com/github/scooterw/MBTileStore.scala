@@ -4,9 +4,9 @@ import scala.slick.jdbc.JdbcBackend.Database
 import scala.slick.driver.SQLiteDriver.simple._
 import com.jcraft.jzlib.{ Deflater, Inflater }
 
-class MBTileStore(dbName: String, extension: String = "mbtiles") extends TileStore {
+class MBTileStore(dbName: String) extends TileStore {
   lazy val db = Database.forURL(
-    s"jdbc:sqlite:$dbName.$extension",
+    s"jdbc:sqlite:$dbName",
     driver = "org.sqlite.JDBC"
   )
 

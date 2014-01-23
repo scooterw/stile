@@ -2,13 +2,13 @@ package com.github.scooterw
 
 import scala.io.Source
 
-class EsriTileStore(tilesetPath: String, format: String = "image/png") extends TileStore {
+class EsriTileStore(tilesetPath: String, format: String = "png") extends TileStore {
   def get(coord: Coordinate): Option[Tile] = {
-    val zoom = coord.zoom.toString.padTo(2, "0").reverse.mkString
+    val zoom = coord.zoom.toString.reverse.padTo(2, "0").reverse.mkString
     val column = s"C${toEsriHex(coord.column)}"
     val row = s"R${toEsriHex(coord.row)}"
 
-    val tileData = getTileData(s"$tilesetPath/Layers/_alllayers/L$zoom/$row/$column")
+    val tileData = getTileData(s"$tilesetPath/Layers/_alllayers/L$zoom/$row/$column.$format")
 
     tileData match {
       case Some(tile) => Some(new Tile(tile, format))
@@ -18,7 +18,7 @@ class EsriTileStore(tilesetPath: String, format: String = "image/png") extends T
 
   private def getTileData(tilePath: String): Option[Array[Byte]] = {
     val source = try {
-      Some(Source.fromFile(tilePath, "UTF-8"))
+      Some(Source.fromFile(tilePath, "iso-8859-1"))
     } catch {
       case ex: java.io.FileNotFoundException => None
     }

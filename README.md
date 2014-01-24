@@ -6,7 +6,7 @@ To use (MBTiles example):
 val coords = new com.github.scooterw.Coordinate(0, 1, 1)
 //coords: com.github.scooterw.Coordinate = Coordinate(0, 1, 1)
 
-val store = new com.github.scooterw.MBTileStore("/Users/scooter/Downloads/geography-class")
+val store = new com.github.scooterw.MBTileStore("/Users/scooter/Downloads/geography-class.mbtiles")
 //store: com.github.scooterw.MBTileStore = com.github.scooterw.MBTileStore@b66ddf3
 
 val tile = store.get(coords)

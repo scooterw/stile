@@ -1,4 +1,4 @@
-package com.github.scooterw
+package com.socogeo
 
 import scala.slick.jdbc.JdbcBackend.Database
 import scala.slick.driver.SQLiteDriver.simple._
@@ -14,14 +14,14 @@ class MBTileStore(dbName: String) extends TileStore {
   val metadata: TableQuery[Metadata] = TableQuery[Metadata]
 
   def get(coord: Coordinate): Option[Tile] = {
-    val row = flipY(coord.zoom, coord.row)
+    val row = flipY(coord.z, coord.y)
 
     val mimeType = getTileFormat match {
       case Some(format) => format
       case None => "image/png"
     }
 
-    val tileData = getTileData(coord.zoom, coord.column, row)
+    val tileData = getTileData(coord.z, coord.x, row)
 
     tileData match {
       case Some(data) => Some(new Tile(data, mimeType))
@@ -33,12 +33,12 @@ class MBTileStore(dbName: String) extends TileStore {
     db withSession {
       implicit session =>
         tiles.ddl.create
-        tiles += (coord.zoom, coord.column, flipY(coord.zoom, coord.row), tileData)
+        tiles += (coord.z, coord.x, flipY(coord.zoom, coord.y), tileData)
     }
   }
 
   def delete(coord: Coordinate) = {
-    val query = tiles.filter(_.zoom === coord.zoom).filter(_.col === coord.column).filter(_.row === flipY(coord.zoom, coord.row))
+    val query = tiles.filter(_.zoom === coord.z).filter(_.col === coord.x).filter(_.row === flipY(coord.zoom, coord.y))
 
     db withSession {
       implicit session =>

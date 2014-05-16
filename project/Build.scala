@@ -4,9 +4,9 @@ import Tests._
 import scala.language.postfixOps
 
 object BuildSettings {
-  val buildOrganization = "com.github.scooterw"
+  val buildOrganization = "com.socogeo"
   val buildVersion = "0.1-SNAPSHOT"
-  val buildScalaVersion = "2.10.3"
+  val buildScalaVersion = "2.10.4"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := buildOrganization,
@@ -41,15 +41,18 @@ object ShellPrompt {
 object Resolvers {}
 
 object Dependencies {
-  val slickVersion = "2.0.0"
+  val slickVersion = "2.0.2"
   val jdbcSqliteVersion = "3.7.2"
   val jzlibVersion = "1.1.3"
-  val specs2Version = "2.3.7"
+  val specs2Version = "2.3.12"
+  val sprayVersion = "1.3.1"
 
   val slick = "com.typesafe.slick" %% "slick" % slickVersion
   val jdbcSqlite = "org.xerial" % "sqlite-jdbc" % jdbcSqliteVersion
   val jzlib = "com.jcraft" % "jzlib" % jzlibVersion
   val specs2 = "org.specs2" %% "specs2" % specs2Version % "test"
+  val sprayCan = "io.spray" % "spray-can" % sprayVersion
+  val sprayRouting = "io.spray" % "spray-routing" % sprayVersion
 }
 
 object StileBuild extends Build {
@@ -66,6 +69,11 @@ object StileBuild extends Build {
     jdbcSqlite,
     jzlib,
     specs2
+  )
+
+  val serverDeps = Seq(
+    sprayCan,
+    sprayRouting
   )
 
   lazy val main = Project(
@@ -85,5 +93,11 @@ object StileBuild extends Build {
     file("stile-tile"),
     settings = buildSettings ++ Seq(libraryDependencies ++= tileDeps)
   ) dependsOn(common)
+
+  lazy val server = Project(
+    "server",
+    file("stile-server"),
+    settings = buildSettings ++ Seq(libraryDependencies ++= serverDeps)
+  ) dependsOn(tile)
 }
 

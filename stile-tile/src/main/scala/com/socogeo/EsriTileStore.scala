@@ -1,4 +1,4 @@
-package com.github.scooterw
+package com.socogeo
 
 import scala.io.Source
 

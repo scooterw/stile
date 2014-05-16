@@ -1,4 +1,4 @@
-package com.github.scooterw
+package com.socogeo
 
 import org.specs2.mutable._
 import scala.io.Source

@@ -1,4 +1,4 @@
-package com.github.scooterw
+package com.socogeo
 
 import scala.slick.driver.SQLiteDriver.simple._
 import scala.slick.lifted.ProvenShape
